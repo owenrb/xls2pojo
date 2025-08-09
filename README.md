@@ -21,9 +21,9 @@ To use xls2pojo in your Maven project, add the following dependency to your `pom
 
 ```xml
 <dependency>
-    <groupId>io.owenrbee.xls</groupId>
-    <artifactId>xls2pojo.parx</artifactId>
-    <version>1.0.1</version>
+  <groupId>io.github.owenrb</groupId>
+	<artifactId>xls2pojo</artifactId>
+	<version>1.1.0</version>
 </dependency>
 ```
 
@@ -85,17 +85,17 @@ public class Main {
 
 The main entry point for the library is the `io.owenrbee.xls.xls2pojo.Xls2Pojo` class.
 
-### `Xls2Pojo.convert(String inputFilePath, Class<T> outputClass)`
+- `Xls2Pojo.convert(String inputFilePath, Class<T> outputClass)`
 
-Converts the data from the first sheet of the specified Excel file into a list of objects of the given class.
+  Converts the data from the first sheet of the specified Excel file into a list of objects of the given class.
 
-### `Xls2Pojo.convert(String inputFilePath, Class<T> outputClass, int... sheetIndices)`
+- `Xls2Pojo.convert(String inputFilePath, Class<T> outputClass, int... sheetIndices)`
 
-Converts the data from the specified sheets (by index) of the Excel file into a list of objects.
+  Converts the data from the specified sheets (by index) of the Excel file into a list of objects.
 
-### `Xls2Pojo.convert(String inputFilePath, Class<T> outputClass, String... sheetNames)`
+- `Xls2Pojo.convert(String inputFilePath, Class<T> outputClass, String... sheetNames)`
 
-Converts the data from the specified sheets (by name) of the Excel file into a list of objects.
+  Converts the data from the specified sheets (by name) of the Excel file into a list of objects.
 
 ## How to Build
 

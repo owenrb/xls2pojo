@@ -1,5 +1,6 @@
 package io.owenrbee.xls.xls2pojo;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Xls2PojoTest {
 
     @Test
-    public void load() {
+    public void load() throws IOException {
 
         String filePath = "./sample/sample-01.xlsx";
 

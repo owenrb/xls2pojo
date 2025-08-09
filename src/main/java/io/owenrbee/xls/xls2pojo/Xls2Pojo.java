@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -41,15 +40,13 @@ public class Xls2Pojo {
      * @param inputFilePath the path to the input Excel file.
      * @param outputClass   the class of the output POJO.
      * @return a list of POJOs, or an empty list if an error occurs.
+     * @throws IOException
      */
-    public static <T> List<T> convert(String inputFilePath, Class<T> outputClass) {
+    public static <T> List<T> convert(String inputFilePath, Class<T> outputClass)
+            throws IOException {
 
         try (FileInputStream excelFile = new FileInputStream(inputFilePath)) {
             return convert(excelFile, new SheetReference(0), outputClass); // Default to the first sheet
-
-        } catch (IOException e) {
-            log.error("ERR001: Error reading file {}: {}", inputFilePath, e.getMessage(), e);
-            return Collections.emptyList();
         }
     }
 
@@ -63,8 +60,10 @@ public class Xls2Pojo {
      * @param indices       an array of sheet indices to convert.
      * @return a list of POJOs from the specified sheets, or an empty list if an
      *         error occurs.
+     * @throws IOException
      */
-    public static <T> List<T> convert(String inputFilePath, Class<T> outputClass, int... indices) {
+    public static <T> List<T> convert(String inputFilePath, Class<T> outputClass, int... indices)
+            throws IOException {
 
         List<T> resuList = new ArrayList<>();
         try (FileInputStream excelFile = new FileInputStream(inputFilePath)) {
@@ -72,8 +71,6 @@ public class Xls2Pojo {
                 resuList.addAll(convert(excelFile, new SheetReference(index), outputClass));
             }
 
-        } catch (IOException e) {
-            log.error("ERR002: Error reading file {}: {}", inputFilePath, e.getMessage(), e);
         }
 
         return resuList;
@@ -89,8 +86,10 @@ public class Xls2Pojo {
      * @param sheetNames    an array of sheet names to convert.
      * @return a list of POJOs from the specified sheets, or an empty list if an
      *         error occurs.
+     * @throws IOException
      */
-    public static <T> List<T> convert(String inputFilePath, Class<T> outputClass, String... sheetNames) {
+    public static <T> List<T> convert(String inputFilePath, Class<T> outputClass, String... sheetNames)
+            throws IOException {
 
         List<T> resuList = new ArrayList<>();
         try (FileInputStream excelFile = new FileInputStream(inputFilePath)) {
@@ -98,8 +97,6 @@ public class Xls2Pojo {
                 resuList.addAll(convert(excelFile, new SheetReference(sheetName), outputClass));
             }
 
-        } catch (IOException e) {
-            log.error("ERR003: Error reading file {}: {}", inputFilePath, e.getMessage(), e);
         }
 
         return resuList;
@@ -115,8 +112,10 @@ public class Xls2Pojo {
      *                       name).
      * @param outputClass    the class of the output POJO.
      * @return a list of POJOs, or an empty list if an error occurs.
+     * @throws IOException
      */
-    public static <T> List<T> convert(InputStream inputStream, SheetReference sheetReference, Class<T> outputClass) {
+    public static <T> List<T> convert(InputStream inputStream, SheetReference sheetReference, Class<T> outputClass)
+            throws IOException {
 
         List<FieldInfo> fieldInfo = getFieldInfo(outputClass);
 
@@ -140,13 +139,7 @@ public class Xls2Pojo {
                     .filter(Objects::nonNull) // Filter out null objects
                     .collect(Collectors.toList());
 
-        } catch (Exception e) {
-            log.error("Unexpected error during conversion: {}", e.getMessage(), e);
-            // Handle unexpected exceptions
         }
-
-        return Collections.emptyList();
-
     }
 
     /**

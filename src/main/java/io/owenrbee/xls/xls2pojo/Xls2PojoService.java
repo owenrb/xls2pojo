@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
@@ -16,8 +17,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Service class responsible for the core logic of converting an Excel sheet to a list of JSON strings.
- * It reads an Excel sheet row by row, maps the cell values to the fields of a target POJO,
+ * Service class responsible for the core logic of converting an Excel sheet to
+ * a list of JSON strings.
+ * It reads an Excel sheet row by row, maps the cell values to the fields of a
+ * target POJO,
  * and serializes each row's data into a JSON string.
  */
 @Slf4j
@@ -42,9 +45,11 @@ public class Xls2PojoService {
 
     /**
      * Converts the Excel sheet into a list of JSON strings.
-     * Each JSON string represents a row from the sheet, mapped to the target POJO's structure.
+     * Each JSON string represents a row from the sheet, mapped to the target POJO's
+     * structure.
      *
-     * @return a list of JSON strings, where each string is a JSON representation of a row.
+     * @return a list of JSON strings, where each string is a JSON representation of
+     *         a row.
      */
     public List<String> convert() {
 
@@ -69,6 +74,9 @@ public class Xls2PojoService {
                     String fieldType = getFieldType(fieldName);
 
                     String value = rowValues.get(i);
+                    if (value == null) {
+                        continue; // Skip if the cell is empty
+                    }
 
                     applyValue(map, fieldName,
                             "Date".equals(fieldType) ? row.getCell(i).getDateCellValue().getTime() + "" : value);
@@ -142,7 +150,8 @@ public class Xls2PojoService {
      * Retrieves the data type of a field by its name.
      *
      * @param fieldName the name of the field.
-     * @return the string representation of the field's data type, or null if not found.
+     * @return the string representation of the field's data type, or null if not
+     *         found.
      */
     private String getFieldType(String fieldName) {
         for (FieldInfo fieldInfo : fieldInfoList) {
@@ -155,17 +164,43 @@ public class Xls2PojoService {
     }
 
     /**
-     * Extracts all cell values from a given row and returns them as a list of strings.
+     * Extracts all cell values from a given row and returns them as a list of
+     * strings.
      *
      * @param row the row to process.
      * @return a list of cell values as strings.
      */
     private List<String> getRowValues(Row row) {
-        int first = row.getFirstCellNum();
+        int first = 0;
         int last = row.getLastCellNum();
         return java.util.stream.IntStream.range(first, last)
-                .mapToObj(i -> row.getCell(i).toString())
+                .mapToObj(i -> getCellValue(row.getCell(i)))
                 .toList();
+    }
+
+    /**
+     * Retrieves the value of a cell as a string, handling different cell types.
+     *
+     * @param cell the cell to read.
+     * @return the string value of the cell, or null if the cell is empty.
+     */
+    private String getCellValue(Cell cell) {
+        if (cell == null) {
+            return null;
+        }
+
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue();
+            case NUMERIC:
+                return String.valueOf(cell.getNumericCellValue());
+            case BOOLEAN:
+                return String.valueOf(cell.getBooleanCellValue());
+            case FORMULA:
+                return cell.getCellFormula();
+            default:
+                return null; // Handle other types as needed
+        }
     }
 
     /**
