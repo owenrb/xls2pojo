@@ -52,6 +52,23 @@ public class Xls2Pojo {
     }
 
     /**
+     * Converts the first sheet of an Excel file provided as an InputStream to a
+     * list of POJOs.
+     *
+     * @param <T>         the type of the output POJO.
+     * @param inputStream the InputStream of the Excel file.
+     * @param outputClass the class of the output POJO.
+     * @return a list of POJOs, or an empty list if an error occurs.
+     * @throws IOException if an error occurs while reading the file or converting
+     *                     the data.
+     */
+    public static <T> List<T> convert(InputStream inputStream, Class<T> outputClass)
+            throws IOException {
+        return convert(inputStream, new SheetReference(0), outputClass); // Default to the first sheet
+
+    }
+
+    /**
      * Converts specific sheets from an Excel file, identified by their indices,
      * into a single list of POJOs.
      *
