@@ -40,7 +40,8 @@ public class Xls2Pojo {
      * @param inputFilePath the path to the input Excel file.
      * @param outputClass   the class of the output POJO.
      * @return a list of POJOs, or an empty list if an error occurs.
-     * @throws IOException
+     * @throws IOException if an error occurs while reading the file or converting
+     *                     the data.
      */
     public static <T> List<T> convert(String inputFilePath, Class<T> outputClass)
             throws IOException {
@@ -60,7 +61,8 @@ public class Xls2Pojo {
      * @param indices       an array of sheet indices to convert.
      * @return a list of POJOs from the specified sheets, or an empty list if an
      *         error occurs.
-     * @throws IOException
+     * @throws IOException if an error occurs while reading the file or converting
+     *                     the data.
      */
     public static <T> List<T> convert(String inputFilePath, Class<T> outputClass, int... indices)
             throws IOException {
@@ -86,7 +88,8 @@ public class Xls2Pojo {
      * @param sheetNames    an array of sheet names to convert.
      * @return a list of POJOs from the specified sheets, or an empty list if an
      *         error occurs.
-     * @throws IOException
+     * @throws IOException if an error occurs while reading the file or converting
+     *                     the data.
      */
     public static <T> List<T> convert(String inputFilePath, Class<T> outputClass, String... sheetNames)
             throws IOException {
@@ -112,7 +115,8 @@ public class Xls2Pojo {
      *                       name).
      * @param outputClass    the class of the output POJO.
      * @return a list of POJOs, or an empty list if an error occurs.
-     * @throws IOException
+     * @throws IOException if an error occurs while reading the file or converting
+     *                     the data.
      */
     public static <T> List<T> convert(InputStream inputStream, SheetReference sheetReference, Class<T> outputClass)
             throws IOException {
@@ -166,7 +170,7 @@ public class Xls2Pojo {
      * A helper class to reference an Excel sheet by either its name or its index.
      */
     @Getter
-    public static class SheetReference {
+    static class SheetReference {
 
         public SheetReference(int index) {
             this.index = index;

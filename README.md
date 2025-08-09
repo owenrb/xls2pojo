@@ -22,8 +22,8 @@ To use xls2pojo in your Maven project, add the following dependency to your `pom
 ```xml
 <dependency>
   <groupId>io.github.owenrb</groupId>
-	<artifactId>xls2pojo</artifactId>
-	<version>1.1.0</version>
+  <artifactId>xls2pojo</artifactId>
+  <version>1.1.0</version>
 </dependency>
 ```
 
