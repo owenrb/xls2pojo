@@ -23,7 +23,7 @@ To use xls2pojo in your Maven project, add the following dependency to your `pom
 <dependency>
   <groupId>io.github.owenrb</groupId>
   <artifactId>xls2pojo</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
 </dependency>
 ```
 
@@ -80,6 +80,35 @@ public class Main {
     }
 }
 ```
+
+## Column Header Names to Java field Names Mapping
+
+**Here's how it works in the Service class:**
+
+1.  Header Extraction: In the constructor, headerNames is initialized by reading the values
+    from the first row (row 0) of the Excel sheet using getRowValues. These are the Excel
+    column headers.
+2.  FieldInfo: The Xls2PojoService is constructed with a List<FieldInfo> fieldInfoList.
+    Each FieldInfo object contains the name (which corresponds to the POJO field name) and
+    type of a field.
+3.  Mapping Logic (`getFieldName` method):
+    - For each headerName extracted from the Excel sheet, the convert method calls
+      getFieldName(headerName).
+    - Inside getFieldName, it iterates through the fieldInfoList.
+    - For each FieldInfo, it compares its name (the POJO field name) with the headerName
+      from Excel.
+    - The comparison is case-insensitive (equalsIgnoreCase) and ignores all whitespace in
+      the headerName (by using replaceAll("\\s+", "")). This means an Excel header like
+      "First Name" would match a POJO field named "firstName" or "firstname".
+    - If a match is found, the corresponding POJO field name (fielInfo.getName()) is
+      returned.
+4.  Usage in `convert`:
+    - In the convert method, for each data row, it iterates through the headerNames.
+    - For each headerName, it calls getFieldName(headerName) to get the corresponding
+      fieldName (POJO field name).
+    - This fieldName is then used as the key when populating the Map<String, Object> map
+      (which will eventually be converted to a JSON string), ensuring that Excel column
+      data is mapped to the correct POJO field.
 
 ## API
 
