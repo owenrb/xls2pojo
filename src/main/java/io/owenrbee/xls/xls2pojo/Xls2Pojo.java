@@ -84,12 +84,31 @@ public class Xls2Pojo {
     public static <T> List<T> convert(String inputFilePath, Class<T> outputClass, int... indices)
             throws IOException {
 
-        List<T> resuList = new ArrayList<>();
         try (FileInputStream excelFile = new FileInputStream(inputFilePath)) {
-            for (int index : indices) {
-                resuList.addAll(convert(excelFile, new SheetReference(index), outputClass));
-            }
+            return convert(excelFile, outputClass, indices);
+        }
 
+    }
+
+    /**
+     * Converts specific sheets from an Excel file provided as an InputStream,
+     * identified by their indices, into a single list of POJOs.
+     *
+     * @param <T>         the type of the output POJO.
+     * @param inputStream the InputStream of the Excel file.
+     * @param outputClass the class of the output POJO.
+     * @param indices     an array of sheet indices to convert.
+     * @return a list of POJOs from the specified sheets, or an empty list if an
+     *         error occurs.
+     * @throws IOException if an error occurs while reading the file or converting
+     *                     the data.
+     */
+    public static <T> List<T> convert(InputStream inputStream, Class<T> outputClass, int... indices)
+            throws IOException {
+
+        List<T> resuList = new ArrayList<>();
+        for (int index : indices) {
+            resuList.addAll(convert(inputStream, new SheetReference(index), outputClass));
         }
 
         return resuList;
@@ -111,12 +130,32 @@ public class Xls2Pojo {
     public static <T> List<T> convert(String inputFilePath, Class<T> outputClass, String... sheetNames)
             throws IOException {
 
-        List<T> resuList = new ArrayList<>();
         try (FileInputStream excelFile = new FileInputStream(inputFilePath)) {
-            for (String sheetName : sheetNames) {
-                resuList.addAll(convert(excelFile, new SheetReference(sheetName), outputClass));
-            }
+            return convert(excelFile, outputClass, sheetNames);
 
+        }
+
+    }
+
+    /**
+     * Converts specific sheets from an Excel file provided as an InputStream,
+     * identified by their names, into a single list of POJOs.
+     *
+     * @param <T>         the type of the output POJO.
+     * @param inputStream the InputStream of the Excel file.
+     * @param outputClass the class of the output POJO.
+     * @param sheetNames  an array of sheet names to convert.
+     * @return a list of POJOs from the specified sheets, or an empty list if an
+     *         error occurs.
+     * @throws IOException if an error occurs while reading the file or converting
+     *                     the data.
+     */
+    public static <T> List<T> convert(InputStream inputStream, Class<T> outputClass, String... sheetNames)
+            throws IOException {
+
+        List<T> resuList = new ArrayList<>();
+        for (String sheetName : sheetNames) {
+            resuList.addAll(convert(inputStream, new SheetReference(sheetName), outputClass));
         }
 
         return resuList;

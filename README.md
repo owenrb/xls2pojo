@@ -23,7 +23,7 @@ To use xls2pojo in your Maven project, add the following dependency to your `pom
 <dependency>
   <groupId>io.github.owenrb</groupId>
   <artifactId>xls2pojo</artifactId>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
 </dependency>
 ```
 

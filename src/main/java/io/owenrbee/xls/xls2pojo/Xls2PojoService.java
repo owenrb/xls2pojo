@@ -52,7 +52,6 @@ public class Xls2PojoService {
      *         a row.
      */
     public List<String> convert() {
-
         List<String> result = new ArrayList<>();
 
         for (Row row : sheet) {
@@ -62,38 +61,45 @@ public class Xls2PojoService {
                 continue;
             }
 
-            List<String> rowValues = getRowValues(row);
-
-            try {
-
-                Map<String, Object> map = new HashMap<>();
-
-                for (int i = 0; i < headerNames.size(); i++) {
-                    String headerName = headerNames.get(i);
-                    String fieldName = getFieldName(headerName);
-                    String fieldType = getFieldType(fieldName);
-
-                    String value = rowValues.get(i);
-                    if (value == null) {
-                        continue; // Skip if the cell is empty
-                    }
-
-                    applyValue(map, fieldName,
-                            "Date".equals(fieldType) ? row.getCell(i).getDateCellValue().getTime() + "" : value);
-                }
-
-                ObjectMapper objectMapper = new ObjectMapper();
-                String jsonString = objectMapper.writeValueAsString(map);
-
+            String jsonString = processRow(row);
+            if (jsonString != null) {
                 result.add(jsonString);
-
-            } catch (IllegalArgumentException | JsonProcessingException | ParseException e) {
-                log.error("", e);
             }
 
         }
 
         return result;
+    }
+
+    protected String processRow(Row row) {
+
+        List<String> rowValues = getRowValues(row);
+
+        try {
+
+            Map<String, Object> map = new HashMap<>();
+
+            for (int i = 0; i < headerNames.size(); i++) {
+                String headerName = headerNames.get(i);
+                String fieldName = getFieldName(headerName);
+                String fieldType = getFieldType(fieldName);
+
+                String value = rowValues.size() > i ? rowValues.get(i) : null;
+                if (value == null) {
+                    continue; // Skip if the cell is empty
+                }
+
+                applyValue(map, fieldName,
+                        "Date".equals(fieldType) ? row.getCell(i).getDateCellValue().getTime() + "" : value);
+            }
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.writeValueAsString(map);
+
+        } catch (IllegalArgumentException | JsonProcessingException | ParseException e) {
+            log.error("", e);
+            return null; // Return null if an error occurs during processing
+        }
     }
 
     /**
